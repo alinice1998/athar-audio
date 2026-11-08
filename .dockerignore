@@ -1,0 +1,15 @@
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.git
+.gitignore
+.env
+.venv
+venv/
+storage/cache/*
+!storage/cache/.gitkeep
+storage/outputs/*
+!storage/outputs/.gitkeep
+storage/uploads/*
+!storage/uploads/.gitkeep

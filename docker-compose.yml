@@ -1,0 +1,15 @@
+services:
+  athar-audio:
+    build: .
+    container_name: athar-audio-app
+    restart: unless-stopped
+    volumes:
+      - ./storage:/app/storage
+    environment:
+      - PORT=8000
+    networks:
+      - proxy-network
+
+networks:
+  proxy-network:
+    external: true

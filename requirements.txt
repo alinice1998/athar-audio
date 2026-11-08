@@ -1,0 +1,16 @@
+# Core DSP & Web Framework
+fastapi>=0.110.0
+uvicorn>=0.28.0
+numpy>=1.26.0
+scipy>=1.12.0
+soundfile>=0.12.1
+torch>=2.2.0
+torchaudio>=2.2.0
+python-multipart>=0.0.9
+requests>=2.31.0
+soxr>=0.3.7
+
+# Optional Studio Audio Enhancements (Automated DSP Fallbacks included)
+pedalboard>=0.9.14
+matchering>=2.0.6
+audio-separator>=0.17.0

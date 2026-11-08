@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>استوديو محاكاة الهندسة الصوتية للتلاوات القرآنية | Quranic Audio Cloner</title>
+    <!-- Google Fonts: Cairo & Tajawal -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        studio: {
+                            900: '#070b14',
+                            850: '#0b1120',
+                            800: '#0f172a',
+                            700: '#1e293b',
+                            600: '#334155',
+                        },
+                        emerald: {
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                        },
+                        gold: {
+                            400: '#facc15',
+                            500: '#eab308',
+                            600: '#ca8a04',
+                            warm: '#d4af37',
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        tajawal: ['Tajawal', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- WaveSurfer.js -->
+    <script src="https://unpkg.com/wavesurfer.js@7/dist/wavesurfer.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body class="bg-studio-900 text-slate-100 font-cairo min-h-screen selection:bg-emerald-500 selection:text-white antialiased">
+    <!-- Background Ambient Glow -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+        <div class="absolute -top-40 right-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl"></div>
+        <div class="absolute top-1/3 left-10 w-80 h-80 bg-gold-warm/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-10 right-10 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="border-b border-slate-800/80 bg-studio-850/70 backdrop-blur-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 via-teal-600 to-slate-900 flex items-center justify-center shadow-lg shadow-emerald-500/20 border border-emerald-400/30">
+                    <i class="fa-solid fa-microphone-lines text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-l from-emerald-400 via-slate-100 to-gold-warm">
+                        استوديو محاكاة الهندسة الصوتية للتلاوات
+                    </h1>
+                    <p class="text-xs text-slate-400 font-tajawal">Quranic Audio Style & Reverb Cloner • محاكاة الفضاء القرآني والترددات بدقة DSP</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div id="systemStatusBadge" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-800/80 border border-slate-700/60 text-xs">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span id="gpuStatusText" class="text-slate-300">جاري فحص المعالج...</span>
+                </div>
+                <a href="https://github.com" target="_blank" class="text-slate-400 hover:text-white transition">
+                    <i class="fa-brands fa-github text-xl"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        
+        <!-- Welcome Hero Banner -->
+        <div class="p-6 rounded-3xl bg-gradient-to-r from-studio-800/80 via-slate-800/40 to-studio-800/80 border border-slate-700/50 backdrop-blur-xl relative overflow-hidden shadow-2xl">
+            <div class="relative z-10 max-w-3xl space-y-2">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    نقاء صوتي متكامل دون رنين معدني
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white">
+                    انقل صدى ودفء كبار القرّاء إلى تلاوتك بصوتك الطبيعي
+                </h2>
+                <p class="text-sm text-slate-300 font-tajawal leading-relaxed">
+                    يقوم الاستوديو بفصل صدى التلاوة المرجعية عصبياً، ومطابقة المنحنى الترددي بين الصوت الجاف والجاف حصراً، ثم توليد بصمة نبضية نقية (IR) للمسجد أو القاعة ودمجها مع خفض الصدى الذكي أثناء النطق.
+                </p>
+            </div>
+        </div>
+
+        <!-- 1. Dual Audio Input Cards (منطقة الإدخال المزدوجة) -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Reference Audio Card -->
+            <div class="studio-card p-6 rounded-3xl border border-slate-700/60 bg-studio-850/60 backdrop-blur-xl flex flex-col justify-between space-y-4 shadow-xl">
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-8 h-8 rounded-xl bg-gold-warm/20 text-gold-warm flex items-center justify-center font-bold text-sm">1</span>
+                            <h3 class="font-bold text-lg text-white">التلاوة المرجعية (Reference)</h3>
+                        </div>
+                        <span id="refCacheBadge" class="hidden text-xs px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            <i class="fa-solid fa-bolt ml-1"></i> مفصول ومخبأ
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-400 font-tajawal mb-4">
+                        اختر تلاوة للمقرئ الذي تعجبك هندسته الصوتية (الصدى، الدفء، والعمق).
+                    </p>
+
+                    <!-- Dropzone -->
+                    <div id="refDropzone" class="border-2 border-dashed border-slate-700 hover:border-gold-warm/60 rounded-2xl p-6 text-center cursor-pointer transition bg-slate-900/40 hover:bg-slate-900/70 group">
+                        <input type="file" id="refFileInput" accept="audio/*" class="hidden">
+                        <div class="space-y-2">
+                            <div class="w-12 h-12 mx-auto rounded-full bg-slate-800 text-gold-warm flex items-center justify-center text-xl group-hover:scale-110 transition">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                            </div>
+                            <div class="text-sm font-semibold text-slate-200" id="refFileLabel">اسحب وأفلت الملف الصوتي هنا أو تصفح</div>
+                            <div class="text-xs text-slate-500">يدعم WAV, MP3, FLAC, M4A حتى 50MB</div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Sample Buttons for Reference -->
+                    <div class="pt-2 flex flex-wrap items-center gap-1.5 text-xs">
+                        <span class="text-slate-400 text-[11px]"><i class="fa-solid fa-sparkles text-gold-warm ml-1"></i>عينات بمؤثرات:</span>
+                        <button type="button" class="sample-btn px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-gold-warm/20 text-slate-300 hover:text-gold-warm border border-slate-700 transition text-[11px]" data-type="ref" data-file="ref_islam_sobhi_maryam.wav">إسلام صبحي - مريم (مؤثرات)</button>
+                        <button type="button" class="sample-btn px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-gold-warm/20 text-slate-300 hover:text-gold-warm border border-slate-700 transition text-[11px]" data-type="ref" data-file="ref_islam_sobhi_qaf.wav">إسلام صبحي - ق (مؤثرات)</button>
+                        <button type="button" class="sample-btn px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-gold-warm/20 text-slate-300 hover:text-gold-warm border border-slate-700 transition text-[11px]" data-type="ref" data-file="ref_alafasy_fatiha.mp3">مشاري العفاسي</button>
+                    </div>
+
+                    <!-- Waveform Player -->
+                    <div id="refWaveContainer" class="hidden mt-4 space-y-2 bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                        <div class="flex items-center justify-between text-xs text-slate-400">
+                            <span id="refFileNameDisplay" class="font-semibold text-slate-200 truncate max-w-[200px]">reference.wav</span>
+                            <span id="refTimeDisplay">0:00 / 0:00</span>
+                        </div>
+                        <div id="refWaveform" class="w-full"></div>
+                        <div class="flex items-center justify-center gap-3 pt-2">
+                            <button id="refPlayBtn" class="px-4 py-1.5 rounded-xl bg-gold-warm text-slate-900 font-bold text-xs hover:bg-yellow-400 transition flex items-center gap-2">
+                                <i class="fa-solid fa-play"></i> استماع للمرجع
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Target User Audio Card -->
+            <div class="studio-card p-6 rounded-3xl border border-slate-700/60 bg-studio-850/60 backdrop-blur-xl flex flex-col justify-between space-y-4 shadow-xl">
+                <div>
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">2</span>
+                            <h3 class="font-bold text-lg text-white">تلاوتك الخام (Dry Voice)</h3>
+                        </div>
+                        <span class="text-xs px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 border border-slate-700">
+                            صوت جاف بدون صدى
+                        </span>
+                    </div>
+                    <p class="text-xs text-slate-400 font-tajawal mb-4">
+                        ارفع تسجيلك الشخصي بصوت جاف أو سجّل مباشرة بصوتك عبر الميكروفون.
+                    </p>
+
+                    <!-- Dropzone and Mic Recorder Container -->
+                    <div class="space-y-3">
+                        <div id="targetDropzone" class="border-2 border-dashed border-slate-700 hover:border-emerald-500/60 rounded-2xl p-5 text-center cursor-pointer transition bg-slate-900/40 hover:bg-slate-900/70 group">
+                            <input type="file" id="targetFileInput" accept="audio/*" class="hidden">
+                            <div class="space-y-1">
+                                <div class="w-10 h-10 mx-auto rounded-full bg-slate-800 text-emerald-400 flex items-center justify-center text-lg group-hover:scale-110 transition">
+                                    <i class="fa-solid fa-file-audio"></i>
+                                </div>
+                                <div class="text-sm font-semibold text-slate-200" id="targetFileLabel">ارفع تسجيل تلاوتك الجافة</div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Sample Buttons for Target -->
+                        <div class="pt-1 flex flex-wrap items-center gap-1.5 text-xs">
+                            <span class="text-slate-400 text-[11px]"><i class="fa-solid fa-microphone text-emerald-400 ml-1"></i>تلاوات خام (نفس الآيات):</span>
+                            <button type="button" class="sample-btn px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-400 border border-slate-700 transition text-[11px]" data-type="target" data-file="target_dry_badr_turki_maryam.wav">بدر التركي - مريم (جاف)</button>
+                            <button type="button" class="sample-btn px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-400 border border-slate-700 transition text-[11px]" data-type="target" data-file="target_dry_hazza_maryam.wav">هزاع البلوشي - مريم (جاف)</button>
+                            <button type="button" class="sample-btn px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-400 border border-slate-700 transition text-[11px]" data-type="target" data-file="target_dry_badr_turki_qaf.wav">بدر التركي - ق (جاف)</button>
+                        </div>
+
+                        <!-- Live Microphone Recording Control -->
+                        <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800/80 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <button id="recordBtn" class="w-11 h-11 rounded-full bg-red-600 hover:bg-red-500 text-white flex items-center justify-center shadow-lg shadow-red-600/30 transition text-base">
+                                    <i class="fa-solid fa-microphone"></i>
+                                </button>
+                                <div>
+                                    <div id="recordStatusText" class="text-xs font-bold text-slate-200">تسجيل مباشر عبر الميكروفون</div>
+                                    <div id="recordTimer" class="text-xs text-slate-400 font-mono">00:00</div>
+                                </div>
+                            </div>
+
+                            <!-- Live Audio Level Meter -->
+                            <div class="flex items-center gap-1.5 h-6 w-32 bg-slate-950 p-1.5 rounded-lg border border-slate-800">
+                                <div id="micMeterBar" class="h-full bg-gradient-to-r from-emerald-500 to-yellow-500 rounded transition-all duration-75" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Waveform Player for Target -->
+                    <div id="targetWaveContainer" class="hidden mt-4 space-y-2 bg-slate-900/60 p-4 rounded-2xl border border-slate-800">
+                        <div class="flex items-center justify-between text-xs text-slate-400">
+                            <span id="targetFileNameDisplay" class="font-semibold text-slate-200 truncate max-w-[200px]">target_dry.wav</span>
+                            <span id="targetTimeDisplay">0:00 / 0:00</span>
+                        </div>
+                        <div id="targetWaveform" class="w-full"></div>
+                        <div class="flex items-center justify-center gap-3 pt-2">
+                            <button id="targetPlayBtn" class="px-4 py-1.5 rounded-xl bg-emerald-500 text-white font-bold text-xs hover:bg-emerald-400 transition flex items-center gap-2">
+                                <i class="fa-solid fa-play"></i> استماع لتلاوتك الخام
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- 2. Engineering Control Panel (لوحة التحكم الهندسية) -->
+        <section class="studio-card p-6 sm:p-8 rounded-3xl border border-slate-700/60 bg-studio-850/60 backdrop-blur-xl shadow-xl space-y-6">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white">لوحة التحكم الهندسية وتخصيص البصمة الصوتية</h3>
+                        <p class="text-xs text-slate-400 font-tajawal">اضبط دمج الترددات، امتداد ذيل الصدى، ومستوى الوضوح الصوتي</p>
+                    </div>
+                </div>
+                <button id="resetParamsBtn" class="text-xs text-slate-400 hover:text-white transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-rotate-left"></i> استعادة الافتراضي
+                </button>
+            </div>
+
+            <!-- Controls Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- EQ Match Slider -->
+                <div class="space-y-2 p-4 rounded-2xl bg-slate-900/50 border border-slate-800">
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="font-bold text-slate-200">نسبة مطابقة الدفء والترددات (EQ Match)</span>
+                        <span id="eqIntensityVal" class="font-mono text-emerald-400 font-bold">80%</span>
+                    </div>
+                    <input type="range" id="eqIntensitySlider" min="0" max="100" value="80" class="w-full accent-emerald-500 cursor-pointer">
+                    <p class="text-[11px] text-slate-400 font-tajawal">ينقل طابع الميكروفون والدفء الصوتي للتلاوة المرجعية.</p>
+                </div>
+
+                <!-- Reverb Mix Slider -->
+                <div class="space-y-2 p-4 rounded-2xl bg-slate-900/50 border border-slate-800">
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="font-bold text-slate-200">مستوى الصدى المسجدي (Reverb Mix)</span>
+                        <span id="reverbMixVal" class="font-mono text-gold-warm font-bold">تلقائي (مكتشف)</span>
+                    </div>
+                    <input type="range" id="reverbMixSlider" min="0" max="100" value="35" class="w-full accent-gold-warm cursor-pointer">
+                    <p class="text-[11px] text-slate-400 font-tajawal">يُضبط تلقائياً على النسبة المستخرجة من المرجع مع حرية التعديل.</p>
+                </div>
+
+                <!-- Decay Scale Slider -->
+                <div class="space-y-2 p-4 rounded-2xl bg-slate-900/50 border border-slate-800">
+                    <div class="flex justify-between items-center text-xs">
+                        <span class="font-bold text-slate-200">امتداد ذيل الصدى (Decay Time Scale)</span>
+                        <span id="decayScaleVal" class="font-mono text-cyan-400 font-bold">1.0x</span>
+                    </div>
+                    <input type="range" id="decayScaleSlider" min="50" max="200" value="100" step="5" class="w-full accent-cyan-400 cursor-pointer">
+                    <p class="text-[11px] text-slate-400 font-tajawal">تكبير أو تصغير حجم الفضاء المسجدي (RT60).</p>
+                </div>
+
+                <!-- Ducking Toggle -->
+                <div class="p-4 rounded-2xl bg-slate-900/50 border border-slate-800 flex items-center justify-between">
+                    <div>
+                        <div class="text-xs font-bold text-slate-200">وضوح مخارج الحروف (Ducking)</div>
+                        <div class="text-[11px] text-slate-400 font-tajawal">خفض الصدى 2.5dB أثناء النطق وإبرازه عند الوقف</div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="duckingToggle" checked class="sr-only peer">
+                        <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                    </label>
+                </div>
+
+                <!-- Noise Gate Clean Toggle -->
+                <div class="p-4 rounded-2xl bg-slate-900/50 border border-slate-800 flex items-center justify-between">
+                    <div>
+                        <div class="text-xs font-bold text-slate-200">تنقية التسجيل من الضجيج والهمهمة</div>
+                        <div class="text-[11px] text-slate-400 font-tajawal">فلتر 80Hz وبوابة ضجيج لإزالة الترددات المزعجة</div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="cleanToggle" checked class="sr-only peer">
+                        <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                    </label>
+                </div>
+
+                <!-- Algorithm Dropdowns -->
+                <div class="space-y-3 p-4 rounded-2xl bg-slate-900/50 border border-slate-800">
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="font-bold text-slate-200">محرك الترددات:</span>
+                        <select id="eqEngineSelect" class="bg-slate-800 text-slate-200 text-xs rounded-lg px-2 py-1 border border-slate-700 focus:outline-none">
+                            <option value="spectral" selected>المطابقة الطيفية الناعمة (FIR)</option>
+                            <option value="matchering">محرك Matchering</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center justify-between text-xs pt-1 border-t border-slate-800/60">
+                        <span class="font-bold text-slate-200">خوارزمية الصدى:</span>
+                        <select id="reverbModeSelect" class="bg-slate-800 text-slate-200 text-xs rounded-lg px-2 py-1 border border-slate-700 focus:outline-none">
+                            <option value="parametric" selected>التوليد البارامتري النقي (Velvet)</option>
+                            <option value="wiener">فك الالتفاف الطيفي (Wiener)</option>
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Start Processing Button -->
+            <div class="pt-4 flex justify-center">
+                <button id="processBtn" class="w-full sm:w-auto px-10 py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 text-white font-extrabold text-base shadow-xl shadow-emerald-500/25 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-3">
+                    <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
+                    <span>بدء محاكاة الهندسة الصوتية والماسترينغ</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- 3. Real-Time Status Progress Bar (مؤشر التقدم اللحظي) -->
+        <section id="progressSection" class="hidden studio-card p-6 rounded-3xl border border-emerald-500/30 bg-studio-850/80 backdrop-blur-xl shadow-2xl space-y-4">
+            <div class="flex items-center justify-between text-xs font-bold text-emerald-400">
+                <span id="currentStageText" class="flex items-center gap-2">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    جاري التجهيز...
+                </span>
+                <span id="progressPercentage" class="font-mono text-sm">0%</span>
+            </div>
+            
+            <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden p-0.5 border border-slate-700">
+                <div id="progressBar" class="bg-gradient-to-r from-emerald-500 to-teal-400 h-full rounded-full transition-all duration-300" style="width: 0%;"></div>
+            </div>
+
+            <!-- Stepper indicators -->
+            <div class="grid grid-cols-5 text-center text-[10px] text-slate-400 pt-2 border-t border-slate-800 font-tajawal gap-1">
+                <div id="step-1" class="transition-colors">1. التجهيز والتنقية</div>
+                <div id="step-2" class="transition-colors">2. فصل الصدى الذكي</div>
+                <div id="step-3" class="transition-colors">3. مطابقة الترددات EQ</div>
+                <div id="step-4" class="transition-colors">4. توليد البصمة IR</div>
+                <div id="step-5" class="transition-colors">5. الدمج والماسترينغ</div>
+            </div>
+        </section>
+
+        <!-- 4. Output Studio & A/B Comparison (استوديو المعاينة والمقارنة) -->
+        <section id="outputSection" class="hidden studio-card p-6 sm:p-8 rounded-3xl border border-emerald-500/40 bg-studio-850/90 backdrop-blur-xl shadow-2xl space-y-8">
+            
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold border border-emerald-500/30">
+                            اكتملت المعالجة بنجاح
+                        </span>
+                        <span id="elapsedTimeBadge" class="text-xs text-slate-400 font-mono">في 4.2 ثانية</span>
+                    </div>
+                    <h3 class="text-xl font-black text-white mt-2">استوديو الاستماع والمقارنة اللحظية (A/B Compare)</h3>
+                </div>
+
+                <!-- Export & Download Buttons -->
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                    <a id="downloadMasterBtn" href="#" download="quranic_master_24bit.wav" class="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-xs shadow-lg shadow-emerald-500/20 transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-download"></i>
+                        <span>تحميل التلاوة الماستر (24-bit)</span>
+                    </a>
+                    <a id="downloadIrBtn" href="#" download="extracted_ir.wav" class="flex-1 sm:flex-initial px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-wave-square"></i>
+                        <span>تحميل البصمة (IR.wav)</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Main A/B Synchronized Player -->
+            <div class="space-y-4 bg-slate-900/70 p-6 rounded-3xl border border-slate-800">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    
+                    <!-- A/B/C Switcher Buttons -->
+                    <div class="flex items-center bg-slate-950 p-1.5 rounded-2xl border border-slate-800">
+                        <button id="switchMasterBtn" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-emerald-500 text-white shadow-md">
+                            <i class="fa-solid fa-sparkles ml-1"></i> تلاوتك بالهندسة (Master)
+                        </button>
+                        <button id="switchTargetBtn" class="px-4 py-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white">
+                            <i class="fa-solid fa-microphone ml-1"></i> تلاوتك الخام (Dry)
+                        </button>
+                        <button id="switchRefBtn" class="px-4 py-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white">
+                            <i class="fa-solid fa-book-quran ml-1"></i> التلاوة المرجعية
+                        </button>
+                    </div>
+
+                    <!-- Main Player Time Display -->
+                    <div class="flex items-center gap-3">
+                        <button id="mainPlayPauseBtn" class="w-12 h-12 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-white flex items-center justify-center text-lg shadow-lg shadow-emerald-500/30 transition">
+                            <i class="fa-solid fa-play"></i>
+                        </button>
+                        <div>
+                            <span id="activeTrackLabel" class="text-xs font-bold text-emerald-400 block">تلاوتك بالهندسة المكتملة</span>
+                            <span id="masterTimeDisplay" class="text-xs text-slate-400 font-mono">0:00 / 0:00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Waveform -->
+                <div id="masterWaveform" class="w-full"></div>
+            </div>
+
+            <!-- Extracted Reverb & Dry Components (مشغلات المكونات المفصولة) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="p-4 rounded-2xl bg-slate-900/50 border border-slate-800 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-slate-800 text-slate-300 flex items-center justify-center">
+                            <i class="fa-solid fa-user"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-slate-200">صوت القارئ المرجعي الجاف (Ref Dry)</div>
+                            <div class="text-[11px] text-slate-400 font-tajawal">مفصول بالذكاء الاصطناعي بدون صدى</div>
+                        </div>
+                    </div>
+                    <button id="playRefDryBtn" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-play"></i> استماع
+                    </button>
+                </div>
+
+                <div class="p-4 rounded-2xl bg-slate-900/50 border border-slate-800 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-slate-800 text-gold-warm flex items-center justify-center">
+                            <i class="fa-solid fa-mosque"></i>
+                        </div>
+                        <div>
+                            <div class="text-xs font-bold text-slate-200">ذيل الصدى المسجدي فقط (Ref Reverb)</div>
+                            <div class="text-[11px] text-slate-400 font-tajawal">الفضاء المكاني المعزول بدون صوت القارئ</div>
+                        </div>
+                    </div>
+                    <button id="playRefReverbBtn" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-700 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-play"></i> استماع
+                    </button>
+                </div>
+            </div>
+
+            <!-- Acoustic Metrics Badges -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center font-tajawal">
+                <div class="p-4 rounded-2xl bg-slate-900/50 border border-slate-800">
+                    <div class="text-[11px] text-slate-400">زمن تلاشي الصدى (RT60)</div>
+                    <div id="statRt60" class="text-lg font-bold text-cyan-400 font-mono mt-1">2.4 s</div>
+                </div>
+                <div class="p-4 rounded-2xl bg-slate-900/50 border border-slate-800">
+                    <div class="text-[11px] text-slate-400">التأخير المسبق (Pre-delay)</div>
+                    <div id="statPredelay" class="text-lg font-bold text-gold-warm font-mono mt-1">35 ms</div>
+                </div>
+                <div class="p-4 rounded-2xl bg-slate-900/50 border border-slate-800">
+                    <div class="text-[11px] text-slate-400">نسبة الصدى (Reverb Mix)</div>
+                    <div id="statMix" class="text-lg font-bold text-emerald-400 font-mono mt-1">35%</div>
+                </div>
+                <div class="p-4 rounded-2xl bg-slate-900/50 border border-slate-800">
+                    <div class="text-[11px] text-slate-400">القمة الحقيقية الماستر</div>
+                    <div id="statPeak" class="text-lg font-bold text-slate-200 font-mono mt-1">-1.0 dBFS</div>
+                </div>
+            </div>
+
+            <!-- Interactive Frequency Spectrum Chart (منحنى الترددات) -->
+            <div class="space-y-4 bg-slate-900/60 p-6 rounded-3xl border border-slate-800">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-200 flex items-center gap-2">
+                            <i class="fa-solid fa-chart-line text-emerald-400"></i>
+                            تحليل الاستجابة الترددية والطيفية (Frequency Response Spectrum)
+                        </h4>
+                        <p class="text-[11px] text-slate-400 font-tajawal">مقارنة بصرية بين التلاوة المرجعية، تلاوتك الخام، والنتيجة بعد المطابقة</p>
+                    </div>
+                </div>
+                <div class="h-64 w-full">
+                    <canvas id="spectrumChart"></canvas>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500 font-tajawal">
+        استوديو محاكاة الهندسة الصوتية للتلاوات القرآنية • معالجة إشارات رقمية (Audio DSP Pipeline)
+    </footer>
+
+    <!-- Frontend Logic Script -->
+    <script src="/static/app.js"></script>
+</body>
+</html>
